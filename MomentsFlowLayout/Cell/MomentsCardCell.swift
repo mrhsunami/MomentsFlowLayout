@@ -10,4 +10,6 @@ import UIKit
 
 class MomentsCardCell: UICollectionViewCell {
     
+    static let identifier = "momentsCard"
+    
 }
