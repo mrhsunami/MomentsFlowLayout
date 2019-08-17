@@ -16,14 +16,17 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let layout = MomentsFlowLayout(itemSize: CGSize(width: 100, height: 100))
+        configureCollectionView()
+    }
+    
+    func configureCollectionView() {
+        let layout = MomentsFlowLayout(itemSize: CGSize(width: 120, height: 120))
         momentsCollectionView = UICollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
         guard let momentsCollectionView = momentsCollectionView else { print("collectionView nil"); return }
         momentsCollectionView.dataSource = self
         momentsCollectionView.delegate = self
         momentsCollectionView.register(MomentsCardCell.self, forCellWithReuseIdentifier: MomentsCardCell.identifier)
         view.addSubview(momentsCollectionView)
-        
     }
 
 }
