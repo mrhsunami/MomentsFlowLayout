@@ -17,7 +17,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         
         let layout = MomentsFlowLayout(itemSize: CGSize(width: 100, height: 100))
-        momentsCollectionView = UICollectionView(frame: view.frame, collectionViewLayout: layout)
+        momentsCollectionView = UICollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
         guard let momentsCollectionView = momentsCollectionView else { print("collectionView nil"); return }
         momentsCollectionView.dataSource = self
         momentsCollectionView.delegate = self
