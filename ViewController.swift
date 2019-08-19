@@ -20,9 +20,11 @@ class ViewController: UIViewController {
     }
     
     func configureCollectionView() {
-        let layout = MomentsFlowLayout(itemSize: CGSize(width: 120, height: 120))
+        let itemSize = CGSize(width: view.frame.width * 0.72, height: view.frame.height * 0.67) // 0.72 is derived from 270/375 (375 is width of Xs) and 0.67 is derived from 550/812 (812 is height of Xs) So the card size should be sized 72% width and 67% height of the device.
+        let layout = MomentsFlowLayout(itemSize: itemSize)
         momentsCollectionView = UICollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
         guard let momentsCollectionView = momentsCollectionView else { print("collectionView nil"); return }
+        momentsCollectionView.decelerationRate = .fast
         momentsCollectionView.dataSource = self
         momentsCollectionView.delegate = self
         momentsCollectionView.register(MomentsCardCell.self, forCellWithReuseIdentifier: MomentsCardCell.identifier)
