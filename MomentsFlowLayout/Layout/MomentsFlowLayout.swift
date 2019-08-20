@@ -10,9 +10,19 @@ import UIKit
 
 class MomentsFlowLayout: UICollectionViewFlowLayout {
     
-    var previousCollectionViewSize: CGSize = CGSize.zero
     
     var lineSpacing: CGFloat = 25
+    let percentageCellShiftsDown: CGFloat = 0.075
+    let cellWidthPercentage: CGFloat = 0.725
+    let cellHeightPercentage: CGFloat = 0.625
+    
+    var previousCollectionViewSize: CGSize = CGSize.zero
+    var currentItemSize = CGSize.zero
+    override var itemSize: CGSize {
+        didSet {
+            currentItemSize = itemSize
+        }
+    }
     
     /// For use with `layoutAttributesForElements(in rect: CGRect)` to calculate 3D transforms
     var scaleOffset: CGFloat = 200
@@ -22,8 +32,10 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
         super.init(coder: aDecoder)
     }
 
-    init(itemSize: CGSize) {
+    init(superViewFrame: CGRect) {
         super.init()
+        
+        let itemSize = CGSize(width: superViewFrame.width * cellWidthPercentage, height: superViewFrame.height * cellHeightPercentage) // 0.72 is derived from 270/375 (375 is width of Xs) and 0.67 is derived from 550/812 (812 is height of Xs) So the card size should be sized 72% width and 67% height of the device.
         self.itemSize = itemSize
         minimumLineSpacing = lineSpacing
         scrollDirection = .horizontal
@@ -43,8 +55,11 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
         let visibleRect = CGRect(x: contentOffset.x, y: contentOffset.y, width: size.width, height: size.height)
         let visibleCenterX = visibleRect.midX
 
+        /// Gotta copy before modifying
+        guard case let newAttributesArray as [UICollectionViewLayoutAttributes] = NSArray(array: layoutAttributes, copyItems: true) else { return nil }
+        
         /// Apply transforms based on distance from visual center
-        layoutAttributes.forEach {
+        newAttributesArray.forEach {
             let distanceFromCenter = -(visibleCenterX - $0.center.x)
             let scale = distanceFromCenter * (self.scaleFactor - 1) / self.scaleOffset + 1
             let amountToShift: CGFloat = distanceFromCenter > 0 ? -distanceFromCenter * 0.85 : distanceFromCenter * 0.01
@@ -52,9 +67,11 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
             let transform2 = CATransform3DScale(transform1, scale, scale, 0)
             $0.transform3D = transform2
             $0.zIndex = -$0.indexPath.row
+            
+            ///TODO: Implement cells getting darker the further back they go
         }
         
-        return layoutAttributes
+        return newAttributesArray
     }
     
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
@@ -119,7 +136,7 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
     func configureContentInset() {
         guard let collectionView = self.collectionView else { fatalError("collectionView nil") }
         let horizontalInset = (collectionView.bounds.size.width - itemSize.width) / 2
-        let topInset = 0.086 * collectionView.frame.height // 0.086 is derived from 70/812 (812 height of Xs). This means the top should be shifted down by 8.6% of the device's screen height
+        let topInset = percentageCellShiftsDown * collectionView.frame.height // 0.086 is derived from 70/812 (812 height of Xs). This means the top of the cell should be shifted down by 8.6% of the device's screen height
         collectionView.contentInset = UIEdgeInsets.init(top: topInset, left: horizontalInset, bottom: 0, right: horizontalInset)
     }
     
