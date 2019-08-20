@@ -47,7 +47,9 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     }
     
     // MARK: Collection View Delegate Methods
-    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.x.rounded())
+    }
 
 }
 
