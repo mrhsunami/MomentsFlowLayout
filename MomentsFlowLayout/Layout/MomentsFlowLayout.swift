@@ -29,6 +29,34 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
         scrollDirection = .horizontal
     }
     
+    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
+
+        /// A largerRect is needed since by the end of our 3D transforms, some cells that may be considered offscreen should actually end up showing on screen. Without this, cells "further back" on the visual stack does not consistently spawn at the right time.
+        let largerRect = CGRect(x: rect.minX, y: rect.minY, width: rect.width * CGFloat(2), height: rect.height)
+        
+        guard let collectionView = self.collectionView else { fatalError("collectionView nil when requesting layoutAttributes") }
+        guard let layoutAttributes = super.layoutAttributesForElements(in: largerRect) else { fatalError("unable to get layoutAttributes") }
+        
+        /// Calculate visibleRect and visibleCenterX
+        let contentOffset = collectionView.contentOffset
+        let size = collectionView.bounds.size
+        let visibleRect = CGRect(x: contentOffset.x, y: contentOffset.y, width: size.width, height: size.height)
+        let visibleCenterX = visibleRect.midX
+
+        /// Apply transforms based on distance from visual center
+        layoutAttributes.forEach {
+            let distanceFromCenter = -(visibleCenterX - $0.center.x)
+            let scale = distanceFromCenter * (self.scaleFactor - 1) / self.scaleOffset + 1
+            let amountToShift: CGFloat = distanceFromCenter > 0 ? -distanceFromCenter * 0.85 : distanceFromCenter * 0.01
+            let transform1 = CATransform3DTranslate(CATransform3DIdentity, amountToShift-16, 0, 0)
+            let transform2 = CATransform3DScale(transform1, scale, scale, 0)
+            $0.transform3D = transform2
+            $0.zIndex = -$0.indexPath.row
+        }
+        
+        return layoutAttributes
+    }
+    
     override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
         
         /// Prepare initial values
@@ -38,7 +66,7 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
         let proposedRect = CGRect(x: proposedContentOffset.x, y: 0, width: collectionView.bounds.width, height: collectionView.bounds.height)
         
         guard let layoutAttributes = self.layoutAttributesForElements(in: proposedRect) else { fatalError("layoutAttributes nil") }
-
+        
         /// Check all layoutAttributes and find the one closest to the center
         var candidateAttributes: UICollectionViewLayoutAttributes?
         for attributes in layoutAttributes {
@@ -69,35 +97,6 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
         }
         
         return CGPoint(x: newOffsetX, y: proposedContentOffset.y)
-    }
-    
-    override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-        guard let ourCollectionView = self.collectionView else { return nil }
-        
-        let largerRect = CGRect(x: 0, y: 0, width: 20000, height: ourCollectionView.frame.height)
-        
-        guard
-            let collectionView = self.collectionView,
-            let superAttributes = super.layoutAttributesForElements(in: largerRect) else { return super.layoutAttributesForElements(in: largerRect) }
-        
-        let contentOffset = collectionView.contentOffset
-        let size = collectionView.bounds.size
-        let visibleRect = CGRect(x: contentOffset.x, y: contentOffset.y, width: size.width, height: size.height)
-        let visibleCenterX = visibleRect.midX
-        
-        guard case let newAttributesArray as [UICollectionViewLayoutAttributes] = NSArray(array: superAttributes, copyItems: true) else { return nil }
-        
-        newAttributesArray.forEach {
-            let distanceFromCenter = -(visibleCenterX - $0.center.x)
-            let scale = distanceFromCenter * (self.scaleFactor - 1) / self.scaleOffset + 1
-            let amountToShift: CGFloat = distanceFromCenter > 0 ? -distanceFromCenter * 0.85 : distanceFromCenter * 0.01
-            let transform1 = CATransform3DTranslate(CATransform3DIdentity, amountToShift-16, 0, 0)
-            let transform2 = CATransform3DScale(transform1, scale, scale, 0)
-            $0.transform3D = transform2
-            $0.zIndex = -$0.indexPath.row
-        }
-        
-        return newAttributesArray
     }
     
     override func shouldInvalidateLayout(forBoundsChange newBounds: CGRect) -> Bool {
