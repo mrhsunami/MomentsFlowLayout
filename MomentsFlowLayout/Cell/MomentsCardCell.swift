@@ -39,11 +39,16 @@ class MomentsCardCell: UICollectionViewCell {
             ///layout using provided layout
             /// 1. Figure out where vertical center is in view
             let textCenter = frame.height * layout.headerAndCaptionVerticalCenterPercentage
-            let marginPercentage: CGFloat = 0.15
+            let marginPercentage: CGFloat = 0.10
             /// 2. Constrain HeaderLabel bottom to line
-            /// 3. Constrain Caption Lable to line
             headerLabel.translatesAutoresizingMaskIntoConstraints = false
-            headerLabel.bottomAnchor.constraint(equalTo: contentView.topAnchor, constant: textCenter)
+            headerLabel.bottomAnchor.constraint(equalTo: contentView.topAnchor, constant: textCenter).isActive = true
+            headerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: contentView.frame.width * marginPercentage).isActive = true
+            headerLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -(contentView.frame.width * marginPercentage)).isActive = true
+            headerLabel.topAnchor.constraint(equalTo: contentView.topAnchor).isActive = true
+            
+            headerLabel.textAlignment = layout.textAlignment
+            /// 3. Constrain Caption Lable to line
             captionLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 20)
             /// Create margins and constrain.
             

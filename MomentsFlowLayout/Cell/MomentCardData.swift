@@ -17,10 +17,6 @@ struct MomentCardData {
 }
 
 struct MomentCardLayout {
-    var textAlignment: CardTextAlignment = .left
+    var textAlignment: NSTextAlignment = .left
     var headerAndCaptionVerticalCenterPercentage: CGFloat = 0.5 // percentage of height of card.
-}
-
-enum CardTextAlignment {
-    case left, right
 }

@@ -64,10 +64,9 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
             let scale = distanceFromCenter * (self.scaleFactor - 1) / self.scaleOffset + 1
             let amountToShift: CGFloat = distanceFromCenter > 0 ? -distanceFromCenter * 0.85 : distanceFromCenter * 0.01
             let transform1 = CATransform3DTranslate(CATransform3DIdentity, amountToShift-16, 0, 0)
-            let transform2 = CATransform3DScale(transform1, scale, scale, 0)
+            let transform2 = CATransform3DScale(transform1, scale, scale, 1)
             $0.transform3D = transform2
             $0.zIndex = -$0.indexPath.row
-            
             ///TODO: Implement cells getting darker the further back they go
         }
         
