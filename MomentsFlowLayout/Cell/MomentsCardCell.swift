@@ -52,7 +52,9 @@ class MomentsCardCell: UICollectionViewCell {
             let textCenter = bounds.height * layout.headerAndCaptionVerticalCenterPercentage // needs to use bounds.height not frame.height as the frame's height is inaccurate for cells spawning to the right of the scrollview's visible bounds. The 3D transform in the MomentsFlowLayout code gets called first before cellForItem gets called which means this gets called after as well.
             
             // Determines the left and right margins as a percentage of the width of the card cell's view.
-            let marginPercentage: CGFloat = 0.10
+            let sideMargin: CGFloat = {
+               return bounds.width * 0.11
+            }()
             
             /// 2. Constrain HeaderLabel bottom to vertical center
             
@@ -64,11 +66,10 @@ class MomentsCardCell: UICollectionViewCell {
             
             headerLabel.textAlignment = layout.textAlignment
             headerLabel.numberOfLines = 0
-            headerLabel.sizeToFit() // This takes care of sizing the width and height so there's only now a need to be explicit about the position via autolayout.
             
             let bottomConstraint = NSLayoutConstraint(item: headerLabel, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1, constant: textCenter)
-            let leadingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1, constant: contentView.frame.width * marginPercentage)
-            let trailingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1, constant: -(contentView.frame.width * marginPercentage))
+            let leadingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: sideMargin)
+            let trailingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: -(sideMargin))
             headerlabelConstraints.append(contentsOf: [bottomConstraint, leadingConstraint, trailingConstraint])
             
             NSLayoutConstraint.activate(headerlabelConstraints)
@@ -76,14 +77,17 @@ class MomentsCardCell: UICollectionViewCell {
             // Style the label
             headerLabel.font = UIFont.systemFont(ofSize: 29, weight: .bold)
             headerLabel.textColor = .white
+//            headerLabel.backgroundColor = .blue
             
             /// 3. Constrain Caption Lable to line
             captionLabel.translatesAutoresizingMaskIntoConstraints = false
+
             captionLabel.leadingAnchor.constraint(equalTo: headerLabel.leadingAnchor).isActive = true
+            captionLabel.trailingAnchor.constraint(equalTo: headerLabel.trailingAnchor).isActive = true
             captionLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 10).isActive = true
-            captionLabel.sizeToFit()
-            captionLabel.textAlignment = layout.textAlignment
             
+            captionLabel.textAlignment = layout.textAlignment
+
             captionLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
             captionLabel.textColor = .white
             
