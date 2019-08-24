@@ -37,15 +37,10 @@ class MomentsCardCell: UICollectionViewCell {
     func configure(with moment: MomentCardData) {
         self.moment = moment
         imageView.image = moment.backgroundImage
+        imageView.contentMode = .scaleAspectFill
         headerLabel.text = moment.heading
         captionLabel.text = moment.caption
         layoutText(with: moment.preferredCardLayout)
-//        if let layout = moment.preferredCardLayout {
-//            layoutText(with: layout)
-//        } else {
-//            let layout = MomentCardLayout(textAlignment: .left, headerAndCaptionVerticalCenterPercentage: 0.5)
-//            layoutText(with: layout)
-//        }
     }
     
     func layoutText(with layout: MomentCardLayout?) {
@@ -54,7 +49,7 @@ class MomentsCardCell: UICollectionViewCell {
         func _layout(using layout: MomentCardLayout) {
             
             /// 1. Figure out where vertical center is in view
-            let textCenter = frame.height * layout.headerAndCaptionVerticalCenterPercentage
+            let textCenter = bounds.height * layout.headerAndCaptionVerticalCenterPercentage // needs to use bounds.height not frame.height as the frame's height is inaccurate for cells spawning to the right of the scrollview's visible bounds. The 3D transform in the MomentsFlowLayout code gets called first before cellForItem gets called which means this gets called after as well.
             
             // Determines the left and right margins as a percentage of the width of the card cell's view.
             let marginPercentage: CGFloat = 0.10
@@ -67,19 +62,16 @@ class MomentsCardCell: UICollectionViewCell {
             NSLayoutConstraint.deactivate(headerlabelConstraints)
             headerlabelConstraints.removeAll()
             
-            let bottomConstraint = NSLayoutConstraint(item: headerLabel, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1, constant: textCenter)
-            headerlabelConstraints.append(bottomConstraint)
-            
-            
-            
-            NSLayoutConstraint.activate(headerlabelConstraints)
-            //            headerLabel.bottomAnchor.constraint(equalTo: contentView.topAnchor, constant: textCenter).isActive = true
-            headerLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: contentView.frame.width * marginPercentage).isActive = true
+            headerLabel.textAlignment = layout.textAlignment
             headerLabel.numberOfLines = 0
             headerLabel.sizeToFit() // This takes care of sizing the width and height so there's only now a need to be explicit about the position via autolayout.
-            //            headerLabel.backgroundColor = .blue
-            headerLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -(contentView.frame.width * marginPercentage)).isActive = true
-            headerLabel.textAlignment = layout.textAlignment
+            
+            let bottomConstraint = NSLayoutConstraint(item: headerLabel, attribute: .bottom, relatedBy: .equal, toItem: contentView, attribute: .top, multiplier: 1, constant: textCenter)
+            let leadingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1, constant: contentView.frame.width * marginPercentage)
+            let trailingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1, constant: -(contentView.frame.width * marginPercentage))
+            headerlabelConstraints.append(contentsOf: [bottomConstraint, leadingConstraint, trailingConstraint])
+            
+            NSLayoutConstraint.activate(headerlabelConstraints)
             
             // Style the label
             headerLabel.font = UIFont.systemFont(ofSize: 29, weight: .bold)
@@ -95,13 +87,6 @@ class MomentsCardCell: UICollectionViewCell {
             captionLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
             captionLabel.textColor = .white
             
-            
-            //            captionLabel.backgroundColor = .blue
-            //            captionLabel.trailingAnchor.constraint(equalTo: headerLabel.trailingAnchor).isActive = true
-            //            captionLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor).isActive = true
-            /// Create margins and constrain.
-            
-            /// 4. Constrain texts to leading or trailing margins by checking alignment
         }
         
         if let layout = layout {
@@ -110,13 +95,7 @@ class MomentsCardCell: UICollectionViewCell {
             let defaultLayout = MomentCardLayout(textAlignment: .left, headerAndCaptionVerticalCenterPercentage: 0.5)
             _layout(using: defaultLayout)
         }
-        
-       
-        
-        /// 1. Figure out where vertical center is in view
-        /// 2. Constrain HeaderLabel bottom to line
-        /// 3. Constrain Caption Lable to line
-        /// 4. Constrain texts to leading or trailing margins by checking alignment
+
     }
     
     func addTap(to view: UIView) {
