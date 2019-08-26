@@ -12,7 +12,6 @@ class MomentsCardCell: UICollectionViewCell {
     
     static let identifier = "momentsCard"
     var moment: MomentCardData?
-//    var indexPath: IndexPath?
     let imageView = UIImageView()
     let headerLabel = UILabel()
     var headerlabelConstraints: [NSLayoutConstraint] = []
