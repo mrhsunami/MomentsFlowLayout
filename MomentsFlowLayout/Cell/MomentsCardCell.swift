@@ -8,11 +8,6 @@
 
 import UIKit
 
-struct MomentCardLayout {
-    var textAlignment: NSTextAlignment = .left
-    var headerAndCaptionVerticalCenterPercentage: CGFloat = 0.5 // percentage of height of card.
-}
-
 class MomentsCardCell: UICollectionViewCell {
     
     static let identifier = "momentsCard"
@@ -26,16 +21,12 @@ class MomentsCardCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        layer.cornerRadius = 25
-//        layer.masksToBounds = true /// By default, the corner radius does not apply to the image in the layer’s contents property; it applies only to the background color and border of the layer. However, setting the masksToBounds property to true causes the content to be clipped to the rounded corners.
-        
         contentView.layer.cornerRadius = 25
-        contentView.layer.masksToBounds = true
+        contentView.layer.masksToBounds = true /// By default, the corner radius does not apply to the image in the layer’s contents property; it applies only to the background color and border of the layer. However, setting the masksToBounds property to true causes the content to be clipped to the rounded corners.
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         contentView.addSubview(imageView)
         contentView.addSubview(headerLabel)
         contentView.addSubview(captionLabel)
-        addTap(to: contentView)
     }
     
     func configure(with moment: MomentCardData) {
@@ -60,7 +51,7 @@ class MomentsCardCell: UICollectionViewCell {
                return bounds.width * 0.11
             }()
             
-            /// 2. Constrain HeaderLabel bottom to vertical center
+            /// 2. Constrain headerLabel bottom to vertical center
             
             headerLabel.translatesAutoresizingMaskIntoConstraints = false
             
@@ -81,9 +72,8 @@ class MomentsCardCell: UICollectionViewCell {
             // Style the label
             headerLabel.font = UIFont.systemFont(ofSize: 29, weight: .bold)
             headerLabel.textColor = .white
-//            headerLabel.backgroundColor = .blue
             
-            /// 3. Constrain Caption Lable to line
+            /// 3. Constrain captionLabel to line
             captionLabel.translatesAutoresizingMaskIntoConstraints = false
 
             captionLabel.leadingAnchor.constraint(equalTo: headerLabel.leadingAnchor).isActive = true
@@ -106,22 +96,8 @@ class MomentsCardCell: UICollectionViewCell {
 
     }
     
-    func addTap(to view: UIView) {
-        let tap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-        tap.cancelsTouchesInView = false
-        view.addGestureRecognizer(tap)
-    }
-    @objc func onTap() {
-        print("tapped")
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        super.touchesBegan(touches, with: event)
-//        print("touchesBegan")
-//    }
     
 }

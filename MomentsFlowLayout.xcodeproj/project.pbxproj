@@ -9,13 +9,14 @@
 /* Begin PBXBuildFile section */
 		D81278BB230CF44F00C9A57F /* MomentCardData.swift in Sources */ = {isa = PBXBuildFile; fileRef = D81278BA230CF44F00C9A57F /* MomentCardData.swift */; };
 		D819371B2308A36500BF3944 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D819371A2308A36500BF3944 /* AppDelegate.swift */; };
-		D819371D2308A36500BF3944 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D819371C2308A36500BF3944 /* ViewController.swift */; };
+		D819371D2308A36500BF3944 /* MomentsFlowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D819371C2308A36500BF3944 /* MomentsFlowViewController.swift */; };
 		D81937202308A36500BF3944 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D819371E2308A36500BF3944 /* Main.storyboard */; };
 		D81937252308A36700BF3944 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D81937232308A36700BF3944 /* LaunchScreen.storyboard */; };
 		D819372D2308A9BC00BF3944 /* MomentsCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D819372C2308A9BC00BF3944 /* MomentsCardCell.swift */; };
 		D81937302308ABD200BF3944 /* MomentsFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D819372F2308ABD200BF3944 /* MomentsFlowLayout.swift */; };
 		D87BDAC22312447100A7AFD3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87BDAC12312447100A7AFD3 /* StoreKit.framework */; };
 		D87BDAC42312486300A7AFD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D87BDAC32312486300A7AFD3 /* Assets.xcassets */; };
+		D8C68411231378E400992620 /* MomentCardLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8C68410231378E400992620 /* MomentCardLayout.swift */; };
 		D8DB3A75230FA32B009FC1DE /* MomentStoriesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DB3A74230FA32B009FC1DE /* MomentStoriesViewController.swift */; };
 		D8DB3A782310771A009FC1DE /* DemoDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DB3A772310771A009FC1DE /* DemoDataStore.swift */; };
 		D8DB3A7A2311ADBB009FC1DE /* MomentsCollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8DB3A792311ADBB009FC1DE /* MomentsCollectionView.swift */; };
@@ -25,7 +26,7 @@
 		D81278BA230CF44F00C9A57F /* MomentCardData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentCardData.swift; sourceTree = "<group>"; };
 		D81937172308A36500BF3944 /* MomentsFlowLayout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MomentsFlowLayout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D819371A2308A36500BF3944 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		D819371C2308A36500BF3944 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		D819371C2308A36500BF3944 /* MomentsFlowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsFlowViewController.swift; sourceTree = "<group>"; };
 		D819371F2308A36500BF3944 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D81937242308A36700BF3944 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D81937262308A36700BF3944 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -33,6 +34,7 @@
 		D819372F2308ABD200BF3944 /* MomentsFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsFlowLayout.swift; sourceTree = "<group>"; };
 		D87BDAC12312447100A7AFD3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D87BDAC32312486300A7AFD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		D8C68410231378E400992620 /* MomentCardLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentCardLayout.swift; sourceTree = "<group>"; };
 		D8DB3A74230FA32B009FC1DE /* MomentStoriesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = MomentStoriesViewController.swift; path = "MomentsFlowLayout/View Controller/MomentStoriesViewController.swift"; sourceTree = SOURCE_ROOT; };
 		D8DB3A772310771A009FC1DE /* DemoDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoDataStore.swift; sourceTree = "<group>"; };
 		D8DB3A792311ADBB009FC1DE /* MomentsCollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsCollectionView.swift; sourceTree = "<group>"; };
@@ -77,8 +79,8 @@
 				D81937262308A36700BF3944 /* Info.plist */,
 				D8DB3A76231076E6009FC1DE /* Data Store */,
 				D8439C8F230BB8B0004633D5 /* View Controller */,
-				D819372E2308A9D300BF3944 /* Cell */,
 				D81937312308ABF300BF3944 /* Layout */,
+				D819372E2308A9D300BF3944 /* Cell */,
 			);
 			path = MomentsFlowLayout;
 			sourceTree = "<group>";
@@ -88,6 +90,7 @@
 			children = (
 				D819372C2308A9BC00BF3944 /* MomentsCardCell.swift */,
 				D81278BA230CF44F00C9A57F /* MomentCardData.swift */,
+				D8C68410231378E400992620 /* MomentCardLayout.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -104,7 +107,7 @@
 		D8439C8F230BB8B0004633D5 /* View Controller */ = {
 			isa = PBXGroup;
 			children = (
-				D819371C2308A36500BF3944 /* ViewController.swift */,
+				D819371C2308A36500BF3944 /* MomentsFlowViewController.swift */,
 				D8DB3A74230FA32B009FC1DE /* MomentStoriesViewController.swift */,
 			);
 			path = "View Controller";
@@ -203,10 +206,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D8DB3A7A2311ADBB009FC1DE /* MomentsCollectionView.swift in Sources */,
-				D819371D2308A36500BF3944 /* ViewController.swift in Sources */,
+				D819371D2308A36500BF3944 /* MomentsFlowViewController.swift in Sources */,
 				D819371B2308A36500BF3944 /* AppDelegate.swift in Sources */,
 				D819372D2308A9BC00BF3944 /* MomentsCardCell.swift in Sources */,
 				D81937302308ABD200BF3944 /* MomentsFlowLayout.swift in Sources */,
+				D8C68411231378E400992620 /* MomentCardLayout.swift in Sources */,
 				D8DB3A75230FA32B009FC1DE /* MomentStoriesViewController.swift in Sources */,
 				D81278BB230CF44F00C9A57F /* MomentCardData.swift in Sources */,
 				D8DB3A782310771A009FC1DE /* DemoDataStore.swift in Sources */,

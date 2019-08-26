@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MomentsFlowViewController.swift
 //  MomentsFlowLayout
 //
 //  Created by Nathan Hsu on 2019-08-17.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class MomentsFlowViewController: UIViewController {
 
     var momentsData: [MomentCardData] = DemoDataStore.momentsData
     var momentsCollectionView: MomentsCollectionView?
@@ -32,7 +32,6 @@ class ViewController: UIViewController {
     func configureMomentsCollectionView() {
 
         let layout = MomentsFlowLayout(superViewFrame: view.frame)
-//        momentsCollectionView = UICollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
         momentsCollectionView = MomentsCollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
         
         guard let momentsCollectionView = momentsCollectionView else { fatalError("collectionView nil") }
@@ -60,7 +59,6 @@ class ViewController: UIViewController {
         momentsLabel.text = "Try it"
         momentsLabel.font = UIFont.systemFont(ofSize: 39, weight: .bold)
         momentsLabel.textColor = .white
-//        momentsLabel.backgroundColor = .blue
         
         let captionLabel = UILabel()
         captionLabel.lineBreakMode = .byWordWrapping
@@ -69,7 +67,6 @@ class ViewController: UIViewController {
         captionLabel.text = "Browse to explore how home \nautomation can simplify your life"
         captionLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         captionLabel.textColor = .white
-//        captionLabel.backgroundColor = .purple
 
         // A UIStackView seemed like a good choice to group the two items. But it seems to limit how much customization is allowed for spacing between items in the stack. Especially when taking into account different device sizes.
         let stackView = UIStackView(arrangedSubviews: [momentsLabel, captionLabel])
@@ -149,7 +146,7 @@ class ViewController: UIViewController {
 
 }
 
-extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     // MARK: Collection View DataSource Methods
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -166,40 +163,17 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     
     // MARK: Collection View Delegate Methods
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print("didSelectItem at \(indexPath.row)")
         let story = MomentStoriesViewController()
         present(story, animated: true, completion: nil)
     }
-//    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
-//        print("didHighlightItem at \(indexPath.row)")
-//        let cell = collectionView.cellForItem(at: indexPath)
-//        UIView.animate(withDuration: 0.3) {
-//            cell?.contentView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
-//        }
-//    }
-//    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
-//        print("didUnhighlightItem at \(indexPath.row)")
-//        let cell = collectionView.cellForItem(at: indexPath)
-//        UIView.animate(withDuration: 0.3) {
-//            cell?.contentView.transform = CGAffineTransform.identity
-//        }
-//    }
-//    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
-//        return true
-//    }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("scrollViewDidScroll")
         if let cell = momentsCollectionView?.highlightedCell {
             momentsCollectionView?.unhighlight(cell: cell)
         }
     }
     
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("scrollViewDidEndDecelerating")
-    }
-    
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-        print("scrollViewWillBeginDecelerating")
         if let cell = momentsCollectionView?.highlightedCell {
             momentsCollectionView?.unhighlight(cell: cell)
             let story = MomentStoriesViewController()
