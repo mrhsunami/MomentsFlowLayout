@@ -25,9 +25,7 @@ class MomentsFlowViewController: UIViewController {
         
     }
     
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+    override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
     
     func configureMomentsCollectionView() {
 
@@ -157,7 +155,7 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MomentsCardCell.identifier, for: indexPath) as! MomentsCardCell
         let moment = momentsData[indexPath.row]
         cell.configure(with: moment)
-        cell.indexPath = indexPath // Save the indexPath to the cell so that MomentsCollectionView touchesShouldBegin can access it.
+//        cell.indexPath = indexPath // Save the indexPath to the cell so that MomentsCollectionView touchesShouldBegin can access it.
         return cell
     }
     

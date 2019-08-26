@@ -10,10 +10,10 @@ import UIKit
 
 class MomentsCollectionView: UICollectionView {
     
-    var highlightedCell: MomentsCardCell?
+    var highlightedCell: UICollectionViewCell?
     
     override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
-        if let cell = view.superview as? MomentsCardCell {
+        if let cell = view.superview as? UICollectionViewCell {
             highlight(cell: cell)
         }
         return true
@@ -21,7 +21,8 @@ class MomentsCollectionView: UICollectionView {
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         if let cell = highlightedCell {
-            guard let indexPath = cell.indexPath else { fatalError("indexPath nil")}
+//            guard let indexPath = cell.indexPath else { fatalError("indexPath nil")}
+            guard let indexPath = indexPath(for: cell) else { fatalError("indexPath nil")}
             guard let delegate = delegate else { fatalError("delegate nil")}
             
             selectItem(at: indexPath, animated: true, scrollPosition: [])
@@ -32,7 +33,7 @@ class MomentsCollectionView: UICollectionView {
         
     }
     
-    func highlight(cell: MomentsCardCell) {
+    func highlight(cell: UICollectionViewCell) {
         cell.isHighlighted = true
         highlightedCell = cell
         
@@ -43,7 +44,7 @@ class MomentsCollectionView: UICollectionView {
         }
         
     }
-    func unhighlight(cell: MomentsCardCell) {
+    func unhighlight(cell: UICollectionViewCell) {
         cell.isHighlighted = false
         highlightedCell = nil
         
