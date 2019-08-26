@@ -14,8 +14,13 @@ class MomentStoriesViewController: UIViewController {
         super.viewDidLoad()
 
         view.backgroundColor = #colorLiteral(red: 0.9995340705, green: 0.988355577, blue: 0.4726552367, alpha: 1)
+        let dismissTap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+        view.addGestureRecognizer(dismissTap)
     }
     
+    @objc func onTap() {
+        self.dismiss(animated: true, completion: nil)
+    }
 
     /*
     // MARK: - Navigation

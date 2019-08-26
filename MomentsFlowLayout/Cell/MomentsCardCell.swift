@@ -17,6 +17,7 @@ class MomentsCardCell: UICollectionViewCell {
     
     static let identifier = "momentsCard"
     var moment: MomentCardData?
+    var indexPath: IndexPath?
     let imageView = UIImageView()
     let headerLabel = UILabel()
     var headerlabelConstraints: [NSLayoutConstraint] = []
@@ -25,8 +26,11 @@ class MomentsCardCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layer.cornerRadius = 25
-        layer.masksToBounds = true /// By default, the corner radius does not apply to the image in the layer’s contents property; it applies only to the background color and border of the layer. However, setting the masksToBounds property to true causes the content to be clipped to the rounded corners.
+//        layer.cornerRadius = 25
+//        layer.masksToBounds = true /// By default, the corner radius does not apply to the image in the layer’s contents property; it applies only to the background color and border of the layer. However, setting the masksToBounds property to true causes the content to be clipped to the rounded corners.
+        
+        contentView.layer.cornerRadius = 25
+        contentView.layer.masksToBounds = true
         imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         contentView.addSubview(imageView)
         contentView.addSubview(headerLabel)
@@ -114,5 +118,10 @@ class MomentsCardCell: UICollectionViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        super.touchesBegan(touches, with: event)
+//        print("touchesBegan")
+//    }
     
 }

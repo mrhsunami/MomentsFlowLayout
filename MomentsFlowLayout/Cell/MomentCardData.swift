@@ -14,4 +14,5 @@ struct MomentCardData {
     let heading: String
     let caption: String
     let preferredCardLayout: MomentCardLayout?
+    
 }

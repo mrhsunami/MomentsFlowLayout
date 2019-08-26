@@ -10,9 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    var momentsDemoData = [#colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1), #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1), #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1), #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1), #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1), #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1), #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1), #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1), #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1), #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1), #colorLiteral(red: 0.4745098054, green: 0.8392156959, blue: 0.9764705896, alpha: 1), #colorLiteral(red: 0.5568627715, green: 0.3529411852, blue: 0.9686274529, alpha: 1), #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1), #colorLiteral(red: 0.9568627477, green: 0.6588235497, blue: 0.5450980663, alpha: 1), #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1), #colorLiteral(red: 0.721568644, green: 0.8862745166, blue: 0.5921568871, alpha: 1)]
     var momentsData: [MomentCardData] = DemoDataStore.momentsData
-    var momentsCollectionView: UICollectionView?
+    var momentsCollectionView: MomentsCollectionView?
     var headerView: UIStackView?
     
     override func viewDidLoad() {
@@ -33,7 +32,8 @@ class ViewController: UIViewController {
     func configureMomentsCollectionView() {
 
         let layout = MomentsFlowLayout(superViewFrame: view.frame)
-        momentsCollectionView = UICollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
+//        momentsCollectionView = UICollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
+        momentsCollectionView = MomentsCollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
         
         guard let momentsCollectionView = momentsCollectionView else { fatalError("collectionView nil") }
         momentsCollectionView.dataSource = self
@@ -66,7 +66,7 @@ class ViewController: UIViewController {
         captionLabel.lineBreakMode = .byWordWrapping
         captionLabel.numberOfLines = 0
         captionLabel.preferredMaxLayoutWidth = currentLayoutItemSize.width
-        captionLabel.text = "Browse to explore how home \nautomation can simply your life"
+        captionLabel.text = "Browse to explore how home \nautomation can simplify your life"
         captionLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         captionLabel.textColor = .white
 //        captionLabel.backgroundColor = .purple
@@ -160,12 +160,51 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MomentsCardCell.identifier, for: indexPath) as! MomentsCardCell
         let moment = momentsData[indexPath.row]
         cell.configure(with: moment)
+        cell.indexPath = indexPath // Save the indexPath to the cell so that MomentsCollectionView touchesShouldBegin can access it.
         return cell
     }
     
     // MARK: Collection View Delegate Methods
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         print("didSelectItem at \(indexPath.row)")
+        let story = MomentStoriesViewController()
+        present(story, animated: true, completion: nil)
+    }
+//    func collectionView(_ collectionView: UICollectionView, didHighlightItemAt indexPath: IndexPath) {
+//        print("didHighlightItem at \(indexPath.row)")
+//        let cell = collectionView.cellForItem(at: indexPath)
+//        UIView.animate(withDuration: 0.3) {
+//            cell?.contentView.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+//        }
+//    }
+//    func collectionView(_ collectionView: UICollectionView, didUnhighlightItemAt indexPath: IndexPath) {
+//        print("didUnhighlightItem at \(indexPath.row)")
+//        let cell = collectionView.cellForItem(at: indexPath)
+//        UIView.animate(withDuration: 0.3) {
+//            cell?.contentView.transform = CGAffineTransform.identity
+//        }
+//    }
+//    func collectionView(_ collectionView: UICollectionView, shouldHighlightItemAt indexPath: IndexPath) -> Bool {
+//        return true
+//    }
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("scrollViewDidScroll")
+        if let cell = momentsCollectionView?.highlightedCell {
+            momentsCollectionView?.unhighlight(cell: cell)
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewDidEndDecelerating")
+    }
+    
+    func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewWillBeginDecelerating")
+        if let cell = momentsCollectionView?.highlightedCell {
+            momentsCollectionView?.unhighlight(cell: cell)
+            let story = MomentStoriesViewController()
+            present(story, animated: true, completion: nil)
+        }
     }
 
 }
