@@ -54,5 +54,4 @@ class MomentsCollectionView: UICollectionView {
             cell.contentView.transform = CGAffineTransform.identity
         }
     }
-
 }

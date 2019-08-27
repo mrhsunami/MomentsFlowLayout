@@ -156,11 +156,15 @@ class MomentsFlowViewController: UIViewController {
         guard let cell = momentsCollectionView.highlightedCell as? MomentsCardCell else { fatalError("highlightedCell nil")}
         
         let cellCurrentPresentationFrame = cell.convert(cell.contentView.layer.presentation()!.frame, to: nil)
+//        let cellCurrentFrame = momentsCollectionView.convert(cell.frame, to: nil)
         momentsCollectionView.highlightedCellFrameDuringAnimation = cellCurrentPresentationFrame
         
         let startingCardFrame = cellCurrentPresentationFrame
+//        let endingCardFrame = cellCurrentFrame
         popTransition.startingCardFrame = startingCardFrame
         popTransition.startingCardCornerRadius = cell.contentView.layer.presentation()!.cornerRadius
+//        popTransition.endingCardFrameAtDismissal = endingCardFrame
+        popTransition.presentedCell = cell
     
     }
 
@@ -182,9 +186,30 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
     
     // MARK: Collection View Delegate Methods
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        scrollToItem(at: indexPath)
+        
         let moment = momentsData[indexPath.row]
         let story = createViewControllerToPresent(with: moment)
         present(story, animated: true, completion: nil)
+    }
+    
+    // Custom scroll method
+    func scrollToItem(at indexPath: IndexPath) {
+        guard let collectionView = momentsCollectionView else { return }
+        let layout = collectionView.collectionViewLayout as! MomentsFlowLayout
+        let itemWidth = layout.currentItemSize.width
+        let itemHeight = layout.currentItemSize.height
+        let lineSpacing = layout.lineSpacing
+        let inset = (collectionView.bounds.size.width - itemWidth)/2
+        let offset = CGFloat(indexPath.row) * (itemWidth + lineSpacing) - inset
+        collectionView.setContentOffset(CGPoint(x: offset, y: collectionView.contentOffset.y), animated: true)
+
+        let collectionViewMargins = (collectionView.frame.height - itemHeight)/2
+        let frameOfCardAfterDismissal = CGRect(x: inset-16, y: collectionView.contentInset.top + collectionViewMargins + 16, width: itemWidth, height: itemHeight)
+        let endFrame = view.convert(frameOfCardAfterDismissal, to: nil)
+
+        popTransition.endingCardFrameAtDismissal = endFrame
     }
 
     // Scrolling cancels a highlight
@@ -197,8 +222,11 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
     // After highlighting a cell, letting it go with out velocity will pop it open.
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         if let cell = momentsCollectionView?.highlightedCell {
-            let indexPath = momentsCollectionView?.indexPath(for: cell)
-            let moment = momentsData[indexPath!.row]
+            guard let indexPath = momentsCollectionView?.indexPath(for: cell) else { fatalError("indexPath nil") }
+            
+            scrollToItem(at: indexPath)
+            
+            let moment = momentsData[indexPath.row]
             let story = createViewControllerToPresent(with: moment)
             
             momentsCollectionView?.unhighlight(cell: cell)
