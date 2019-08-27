@@ -14,6 +14,7 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
     let percentageCellShiftsDown: CGFloat = 0.075
     let cellWidthPercentage: CGFloat = 0.725
     let cellHeightPercentage: CGFloat = 0.625
+    let cellCenterXOffset: CGFloat = -16
     
     var previousCollectionViewSize: CGSize = CGSize.zero
     var currentItemSize = CGSize.zero
@@ -61,8 +62,8 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
         newAttributesArray.forEach {
             let distanceFromCenter = -(visibleCenterX - $0.center.x)
             let scale = distanceFromCenter * (self.scaleFactor - 1) / self.scaleOffset + 1
-            let amountToShift: CGFloat = distanceFromCenter > 0 ? -distanceFromCenter * 0.85 : distanceFromCenter * 0.01
-            let transform1 = CATransform3DTranslate(CATransform3DIdentity, amountToShift-16, 0, 0)
+            let amountToShiftX: CGFloat = distanceFromCenter > 0 ? -distanceFromCenter * 0.85 : distanceFromCenter * 0.01
+            let transform1 = CATransform3DTranslate(CATransform3DIdentity, amountToShiftX + cellCenterXOffset, 0, 0)
             let transform2 = CATransform3DScale(transform1, scale, scale, 1)
             $0.transform3D = transform2
             $0.zIndex = -$0.indexPath.row

@@ -10,6 +10,7 @@ import UIKit
 
 class MomentsCollectionView: UICollectionView {
     
+    var focusedCell: UICollectionViewCell?
     var highlightedCell: UICollectionViewCell?
     var highlightedCellFrameDuringAnimation: CGRect?
     

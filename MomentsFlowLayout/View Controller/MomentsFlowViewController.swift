@@ -203,11 +203,19 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
         let lineSpacing = layout.lineSpacing
         let inset = (collectionView.bounds.size.width - itemWidth)/2
         let offset = CGFloat(indexPath.row) * (itemWidth + lineSpacing) - inset
+        
         collectionView.setContentOffset(CGPoint(x: offset, y: collectionView.contentOffset.y), animated: true)
+        
+        let cell = collectionView.cellForItem(at: indexPath)
+        
+        collectionView.focusedCell = cell
 
-        let collectionViewMargins = (collectionView.frame.height - itemHeight)/2
-        let frameOfCardAfterDismissal = CGRect(x: inset-16, y: collectionView.contentInset.top + collectionViewMargins + 16, width: itemWidth, height: itemHeight)
-        let endFrame = view.convert(frameOfCardAfterDismissal, to: nil)
+//        let collectionViewVerticalMargins = (collectionView.frame.height - collectionView.contentInset.top - itemHeight)/2
+////        let frameOfCardAfterDismissal = CGRect(x: inset-16, y: collectionView.contentInset.top + collectionViewMargins + 16, width: itemWidth, height: itemHeight)
+//        let frameOfCardAfterDismissal = CGRect(x: inset + layout.cellCenterXOffset, y: collectionViewVerticalMargins + collectionView.contentInset.top, width: itemWidth, height: itemHeight)
+        
+        
+        let endFrame = collectionView.convert(cell!.frame, to: nil)
 
         popTransition.endingCardFrameAtDismissal = endFrame
     }

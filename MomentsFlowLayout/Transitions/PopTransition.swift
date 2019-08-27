@@ -67,9 +67,14 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
         case .dismiss:
             guard let fromVC = transitionContext.viewController(forKey: .from) else { fatalError("fromVC nil") }
             guard let fromView = fromVC.view else { fatalError("fromView nil") }
-            guard let toVC = transitionContext.viewController(forKey: .to) else { fatalError("toVC nil") }
+            guard let toVC = transitionContext.viewController(forKey: .to) as? MomentsFlowViewController else { fatalError("toVC nil") }
             guard let toView = toVC.view else { fatalError("toView nil")}
             guard let presentedCell = presentedCell else { fatalError("presentedCell nil") }
+            
+            guard let collectionView = toVC.momentsCollectionView else { fatalError("momentsCollectionView nil")}
+            guard let focusedCell = collectionView.focusedCell else { fatalError("focusedCell nil") }
+            
+//            let endFrame = collectionView.convert(focusedCell.frame, to: nil)
             
             containerView.addSubview(toView)
             containerView.addSubview(fromView)
@@ -77,7 +82,9 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
             toView.frame = transitionContext.finalFrame(for: toVC)
             
             let popDown = UIViewPropertyAnimator(duration: popDownDuration, dampingRatio: 0.75) {
-                fromView.frame = endingCardFrame
+                let endFrame = collectionView.convert(focusedCell.frame, to: nil)
+                fromView.frame = endFrame
+//                fromView.frame =
                 fromView.layer.cornerRadius = startingCardCornerRadius
             }
             popDown.addCompletion { (position) in
