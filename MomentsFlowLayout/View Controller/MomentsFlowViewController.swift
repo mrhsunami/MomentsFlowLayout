@@ -158,12 +158,10 @@ class MomentsFlowViewController: UIViewController {
         let cellCurrentPresentationFrame = cell.convert(cell.contentView.layer.presentation()!.frame, to: nil)
         momentsCollectionView.highlightedCellFrameDuringAnimation = cellCurrentPresentationFrame
         
-        let startingView = UIView()
-        startingView.frame = cellCurrentPresentationFrame
-        startingView.layer.cornerRadius = cell.contentView.layer.presentation()!.cornerRadius
-        startingView.layer.masksToBounds = true
-        
-        popTransition.startingView = startingView
+        let startingCardFrame = cellCurrentPresentationFrame
+        popTransition.startingCardFrame = startingCardFrame
+        popTransition.startingCardCornerRadius = cell.contentView.layer.presentation()!.cornerRadius
+    
     }
 
 }

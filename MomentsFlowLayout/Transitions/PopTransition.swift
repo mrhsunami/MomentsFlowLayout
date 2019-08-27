@@ -18,7 +18,8 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     let popUpDuration: Double = 0.35
     let popDownDuration: Double = 0.3
     var transitionType = TransitionType.dismiss
-    var startingView: UIView?
+    var startingCardFrame: CGRect?
+    var startingCardCornerRadius: CGFloat?
     
     // MARK - UIViewControllerAnimatedTransitioning Methods
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -33,17 +34,18 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     func animateTransition(using transitionContext: UIViewControllerContextTransitioning) {
         let containerView = transitionContext.containerView
     
-        guard let startingView = startingView else { fatalError("startingView nil")}
+        guard let startingCardFrame = startingCardFrame else { fatalError("startingCardFrame nil")}
+        guard let startingCardCornerRadius = startingCardCornerRadius else { fatalError("cornerRadius nil")}
         
         let toVC = transitionContext.viewController(forKey: .to)!
         guard let toView = toVC.view else { fatalError("toView nil")}
         
-        let startFrame = startingView.frame
+        let startFrame = startingCardFrame
         let finalFrame = transitionContext.finalFrame(for: toVC)
 
         containerView.addSubview(toVC.view)
         toView.frame = startFrame
-        toView.layer.cornerRadius = startingView.layer.cornerRadius
+        toView.layer.cornerRadius = startingCardCornerRadius
         toView.layer.masksToBounds = true
         toView.layoutSubviews()
         
@@ -62,11 +64,14 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     // MARK - UIViewControllerTransitioningDelegate Methods
     
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transitionType = .present
         return self
     }
     
-//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-//        return self
-//    }
+    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+        transitionType = .dismiss
+        return self
+    }
+    
 
 }
