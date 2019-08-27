@@ -11,6 +11,7 @@ import UIKit
 class MomentsCollectionView: UICollectionView {
     
     var highlightedCell: UICollectionViewCell?
+    var highlightedCellFrameDuringAnimation: CGRect?
     
     override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
         if let cell = view.superview as? UICollectionViewCell {
@@ -35,9 +36,11 @@ class MomentsCollectionView: UICollectionView {
     func highlight(cell: UICollectionViewCell) {
         cell.isHighlighted = true
         highlightedCell = cell
+
+        let highlightTransform = CGAffineTransform(scaleX: 0.965, y: 0.965)
         
         UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 0, options: [.curveEaseOut], animations: {
-            cell.contentView.transform = CGAffineTransform(scaleX: 0.965, y: 0.965)
+            cell.contentView.transform = highlightTransform
         }) { (completed) in
             
         }

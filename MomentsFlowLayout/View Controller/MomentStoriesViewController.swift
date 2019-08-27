@@ -10,15 +10,106 @@ import UIKit
 
 class MomentStoriesViewController: UIViewController {
 
+    var moment: MomentCardData?
+    let imageView = UIImageView()
+    let headerLabel = UILabel()
+    var headerlabelConstraints: [NSLayoutConstraint] = []
+    let captionLabel = UILabel()
+    var captionLabelConstraints: [NSLayoutConstraint] = []
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = #colorLiteral(red: 0.9995340705, green: 0.988355577, blue: 0.4726552367, alpha: 1)
+        view.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
         setupDismissTapGesture()
-        setupTransitioningDelegate()
+        view.addSubview(imageView)
+        view.addSubview(headerLabel)
+        view.addSubview(captionLabel)
+        imageView.frame = view.frame
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        imageView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        
+//        imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+//        imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+//        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+//        imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+
+        
+        configure()
     }
     
-    func setupTransitioningDelegate() {
+    override func viewWillLayoutSubviews() {
+//        layoutText(with: moment?.preferredCardLayout)
+    }
+    
+    func configure() {
+        guard let moment = moment else { fatalError("no moment")}
+        imageView.image = moment.backgroundImage
+        imageView.contentMode = .scaleAspectFill
+        headerLabel.text = moment.heading
+        captionLabel.text = moment.caption
+//        layoutText(with: moment.preferredCardLayout)
+    }
+    
+    func layoutText(with layout: MomentCardLayout?) {
+        
+        /// The parent function receives an optional layout which has to be unwrapped before passing the layout as an arguement to this internal layout function.
+        func _layout(using layout: MomentCardLayout) {
+            
+            /// 1. Figure out where vertical center is in view
+            let textCenter = view.bounds.height * layout.headerAndCaptionVerticalCenterPercentage // needs to use bounds.height not frame.height as the frame's height is inaccurate for cells spawning to the right of the scrollview's visible bounds. The 3D transform in the MomentsFlowLayout code gets called first before cellForItem gets called which means this gets called after as well.
+            
+            // Determines the left and right margins as a percentage of the width of the card cell's view.
+            let sideMargin: CGFloat = {
+                return view.bounds.width * 0.11
+            }()
+            
+            /// 2. Constrain headerLabel bottom to vertical center
+            
+            headerLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Contraints need to be deactivated each time a cell is configured as the layout of the cell will be different depending if it spawned to the left or right of the visible bounds of the scrollview since cells are large to the left, and smaller to the right. This is needed because the textCenter constant's calculation produces different results depending on the size. And to deactivate constratings, we need to store references to them outside of this scope
+            NSLayoutConstraint.deactivate(headerlabelConstraints)
+            headerlabelConstraints.removeAll()
+            
+            headerLabel.textAlignment = layout.textAlignment
+            headerLabel.numberOfLines = 0
+            
+            let bottomConstraint = NSLayoutConstraint(item: headerLabel, attribute: .bottom, relatedBy: .equal, toItem: view, attribute: .top, multiplier: 1, constant: textCenter)
+            let leadingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .leading, relatedBy: .equal, toItem: view, attribute: .leading, multiplier: 1, constant: sideMargin)
+            let trailingConstraint = NSLayoutConstraint(item: headerLabel, attribute: .trailing, relatedBy: .equal, toItem: view, attribute: .trailing, multiplier: 1, constant: -(sideMargin))
+            headerlabelConstraints.append(contentsOf: [bottomConstraint, leadingConstraint, trailingConstraint])
+            
+            NSLayoutConstraint.activate(headerlabelConstraints)
+            
+            // Style the label
+            headerLabel.font = UIFont.systemFont(ofSize: 29, weight: .bold)
+            headerLabel.textColor = .white
+            
+            /// 3. Constrain captionLabel to line
+            captionLabel.translatesAutoresizingMaskIntoConstraints = false
+            
+            captionLabel.leadingAnchor.constraint(equalTo: headerLabel.leadingAnchor).isActive = true
+            captionLabel.trailingAnchor.constraint(equalTo: headerLabel.trailingAnchor).isActive = true
+            captionLabel.topAnchor.constraint(equalTo: headerLabel.bottomAnchor, constant: 10).isActive = true
+            
+            captionLabel.textAlignment = layout.textAlignment
+            
+            captionLabel.font = UIFont.systemFont(ofSize: 15, weight: .semibold)
+            captionLabel.textColor = .white
+            
+        }
+        
+        if let layout = layout {
+            _layout(using: layout)
+        } else {
+            let defaultLayout = MomentCardLayout(textAlignment: .left, headerAndCaptionVerticalCenterPercentage: 0.5)
+            _layout(using: defaultLayout)
+        }
         
     }
     

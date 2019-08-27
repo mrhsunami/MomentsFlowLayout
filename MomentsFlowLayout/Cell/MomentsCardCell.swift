@@ -22,10 +22,15 @@ class MomentsCardCell: UICollectionViewCell {
         super.init(frame: frame)
         contentView.layer.cornerRadius = 25
         contentView.layer.masksToBounds = true /// By default, the corner radius does not apply to the image in the layer’s contents property; it applies only to the background color and border of the layer. However, setting the masksToBounds property to true causes the content to be clipped to the rounded corners.
-        imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
         contentView.addSubview(imageView)
         contentView.addSubview(headerLabel)
         contentView.addSubview(captionLabel)
+//        imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        imageView.widthAnchor.constraint(equalTo: contentView.widthAnchor).isActive = true
+        imageView.heightAnchor.constraint(equalTo: contentView.heightAnchor).isActive = true
     }
     
     func configure(with moment: MomentCardData) {
