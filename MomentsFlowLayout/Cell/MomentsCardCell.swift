@@ -25,7 +25,7 @@ class MomentsCardCell: UICollectionViewCell {
         contentView.addSubview(imageView)
         contentView.addSubview(headerLabel)
         contentView.addSubview(captionLabel)
-//        imageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true

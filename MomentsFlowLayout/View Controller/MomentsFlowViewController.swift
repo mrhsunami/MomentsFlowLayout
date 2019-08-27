@@ -143,32 +143,27 @@ class MomentsFlowViewController: UIViewController {
         arButtonContainer.heightAnchor.constraint(equalToConstant: arButtonSize).isActive = true
     }
     
-    private func createCopy(of view: MomentsCardCell) -> UIView {
-        let copy = UIView(frame: view.frame)
-        
-        copy.backgroundColor = #colorLiteral(red: 0.9995340705, green: 0.988355577, blue: 0.4726552367, alpha: 1)
-        return copy
-    }
-    
-    func createViewControllerToPresent() -> MomentStoriesViewController {
+    func createViewControllerToPresent(with moment: MomentCardData) -> MomentStoriesViewController {
         let story = MomentStoriesViewController()
-        
-        guard let momentsCollectionView = momentsCollectionView else { fatalError("momentsCollectionView nil")}
-        guard let cell = momentsCollectionView.highlightedCell as? MomentsCardCell else { fatalError("highlightedCell nil")}
-
-        let presentationValue = cell.convert(cell.contentView.layer.presentation()!.frame, to: nil)
-        momentsCollectionView.highlightedCellFrameDuringAnimation = presentationValue
-
-        let copy = createCopy(of: cell)
-        copy.frame = presentationValue
-        let presentationCornerRadius = cell.contentView.layer.presentation()!.cornerRadius
-        copy.layer.cornerRadius = presentationCornerRadius
-        copy.layer.masksToBounds = true
-        
-        popTransition.startingView = copy
-        
+        story.moment = moment
+        calculateTransitionStartingView()
         story.transitioningDelegate = popTransition
         return story
+    }
+    
+    func calculateTransitionStartingView() {
+        guard let momentsCollectionView = momentsCollectionView else { fatalError("momentsCollectionView nil")}
+        guard let cell = momentsCollectionView.highlightedCell as? MomentsCardCell else { fatalError("highlightedCell nil")}
+        
+        let cellCurrentPresentationFrame = cell.convert(cell.contentView.layer.presentation()!.frame, to: nil)
+        momentsCollectionView.highlightedCellFrameDuringAnimation = cellCurrentPresentationFrame
+        
+        let startingView = UIView()
+        startingView.frame = cellCurrentPresentationFrame
+        startingView.layer.cornerRadius = cell.contentView.layer.presentation()!.cornerRadius
+        startingView.layer.masksToBounds = true
+        
+        popTransition.startingView = startingView
     }
 
 }
@@ -189,27 +184,24 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
     
     // MARK: Collection View Delegate Methods
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        let story = createViewControllerToPresent()
-      
         let moment = momentsData[indexPath.row]
-        story.moment = moment
-       
+        let story = createViewControllerToPresent(with: moment)
         present(story, animated: true, completion: nil)
     }
 
+    // Scrolling cancels a highlight
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let cell = momentsCollectionView?.highlightedCell {
             momentsCollectionView?.unhighlight(cell: cell)
         }
     }
     
+    // After highlighting a cell, letting it go with out velocity will pop it open.
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
         if let cell = momentsCollectionView?.highlightedCell {
-            let story = createViewControllerToPresent()
-            
             let indexPath = momentsCollectionView?.indexPath(for: cell)
             let moment = momentsData[indexPath!.row]
-            story.moment = moment
+            let story = createViewControllerToPresent(with: moment)
             
             momentsCollectionView?.unhighlight(cell: cell)
             present(story, animated: true, completion: nil)

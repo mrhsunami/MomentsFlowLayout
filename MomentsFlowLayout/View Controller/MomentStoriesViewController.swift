@@ -20,33 +20,27 @@ class MomentStoriesViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        view.backgroundColor = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+        
         setupDismissTapGesture()
         view.addSubview(imageView)
         view.addSubview(headerLabel)
         view.addSubview(captionLabel)
+        
         imageView.frame = view.frame
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         imageView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         imageView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-        
-//        imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-//        imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-//        imageView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-//        imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
 
-        
-        configure()
+        configureMomentData()
     }
     
     override func viewWillLayoutSubviews() {
 //        layoutText(with: moment?.preferredCardLayout)
     }
     
-    func configure() {
+    func configureMomentData() {
         guard let moment = moment else { fatalError("no moment")}
         imageView.image = moment.backgroundImage
         imageView.contentMode = .scaleAspectFill

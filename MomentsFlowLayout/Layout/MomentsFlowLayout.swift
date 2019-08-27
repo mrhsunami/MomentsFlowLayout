@@ -10,7 +10,6 @@ import UIKit
 
 class MomentsFlowLayout: UICollectionViewFlowLayout {
     
-    
     var lineSpacing: CGFloat = 25
     let percentageCellShiftsDown: CGFloat = 0.075
     let cellWidthPercentage: CGFloat = 0.725

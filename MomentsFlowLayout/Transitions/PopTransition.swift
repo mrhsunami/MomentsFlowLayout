@@ -35,37 +35,24 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     
         guard let startingView = startingView else { fatalError("startingView nil")}
         
-//        containerView.addSubview(startingView)
-        
-//        let copy = createCopy(of: cell)
-//        copy.frame = presentationValue
-//        let presentationCornerRadius = cell.contentView.layer.presentation()!.cornerRadius
-//        copy.layer.cornerRadius = presentationCornerRadius
-//        copy.layer.masksToBounds = true
-        
         let toVC = transitionContext.viewController(forKey: .to)!
+        guard let toView = toVC.view else { fatalError("toView nil")}
+        
+        let startFrame = startingView.frame
         let finalFrame = transitionContext.finalFrame(for: toVC)
 
-//        toVC.view.isHidden = true
-        toVC.view.isHidden = false
-        
         containerView.addSubview(toVC.view)
-        toVC.view.frame = startingView.frame
-        toVC.view.layer.cornerRadius = startingView.layer.cornerRadius
-        toVC.view.layer.masksToBounds = true
-        toVC.view.layoutSubviews()
+        toView.frame = startFrame
+        toView.layer.cornerRadius = startingView.layer.cornerRadius
+        toView.layer.masksToBounds = true
+        toView.layoutSubviews()
         
         let popUp = UIViewPropertyAnimator(duration: popUpDuration, dampingRatio: 0.75) {
-//            startingView.frame = finalFrame
-//            startingView.layer.cornerRadius = 0
-            toVC.view.frame = finalFrame
-            toVC.view.layer.cornerRadius = 0
-//            toVC.view.layoutSubviews()
+            toView.frame = finalFrame
+            toView.layer.cornerRadius = 0
         }
         popUp.addCompletion { (position) in
             if position == .end {
-//                startingView.removeFromSuperview()
-                toVC.view.isHidden = false
                 transitionContext.completeTransition(true)
             }
         }
@@ -77,5 +64,9 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     func animationController(forPresented presented: UIViewController, presenting: UIViewController, source: UIViewController) -> UIViewControllerAnimatedTransitioning? {
         return self
     }
+    
+//    func animationController(forDismissed dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
+//        return self
+//    }
 
 }
