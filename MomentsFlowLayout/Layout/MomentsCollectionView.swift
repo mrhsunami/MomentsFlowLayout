@@ -10,9 +10,8 @@ import UIKit
 
 class MomentsCollectionView: UICollectionView {
     
-    var focusedCell: UICollectionViewCell?
+    var focusedCell: UICollectionViewCell? // The cell that is fully visible
     var highlightedCell: UICollectionViewCell?
-    var highlightedCellFrameDuringAnimation: CGRect?
     
     override func touchesShouldBegin(_ touches: Set<UITouch>, with event: UIEvent?, in view: UIView) -> Bool {
         if let cell = view.superview as? UICollectionViewCell {

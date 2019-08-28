@@ -10,11 +10,16 @@ import UIKit
 
 class MomentsFlowLayout: UICollectionViewFlowLayout {
     
-    var lineSpacing: CGFloat = 25
-    let percentageCellShiftsDown: CGFloat = 0.075
-    let cellWidthPercentage: CGFloat = 0.725
-    let cellHeightPercentage: CGFloat = 0.625
+    // Cell positioning
+    var lineSpacingBetweenCells: CGFloat = 25
+    let percentageCellShiftsDown: CGFloat = 0.075 // With respect to device height. Creates space for headings.
+    let cellWidthPercentage: CGFloat = 0.725 // Percentage of device size
+    let cellHeightPercentage: CGFloat = 0.625  // Percentage of device size
     let cellCenterXOffset: CGFloat = -16
+    
+    /// For use with `layoutAttributesForElements(in rect: CGRect)` to calculate 3D transforms
+    var scaleOffset: CGFloat = 200
+    var scaleFactor: CGFloat = 0.95
     
     var previousCollectionViewSize: CGSize = CGSize.zero
     var currentItemSize = CGSize.zero
@@ -24,20 +29,16 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
         }
     }
     
-    /// For use with `layoutAttributesForElements(in rect: CGRect)` to calculate 3D transforms
-    var scaleOffset: CGFloat = 200
-    var scaleFactor: CGFloat = 0.95
-    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    init(superViewFrame: CGRect) {
+    init(containerViewFrame: CGRect) {
         super.init()
         
-        let itemSize = CGSize(width: superViewFrame.width * cellWidthPercentage, height: superViewFrame.height * cellHeightPercentage) // 0.72 is derived from 270/375 (375 is width of Xs) and 0.67 is derived from 550/812 (812 is height of Xs) So the card size should be sized 72% width and 67% height of the device.
+        let itemSize = CGSize(width: containerViewFrame.width * cellWidthPercentage, height: containerViewFrame.height * cellHeightPercentage) // 0.72 is derived from 270/375 (375 is width of Xs) and 0.67 is derived from 550/812 (812 is height of Xs) So the card size should be sized 72% width and 67% height of the device.
         self.itemSize = itemSize
-        minimumLineSpacing = lineSpacing
+        minimumLineSpacing = lineSpacingBetweenCells
         scrollDirection = .horizontal
     }
     
@@ -134,9 +135,9 @@ class MomentsFlowLayout: UICollectionViewFlowLayout {
     /// This takes into account item width to assure that cells are centered when scrolled to either ends of the collection view's scroll view
     func configureContentInset() {
         guard let collectionView = self.collectionView else { fatalError("collectionView nil") }
-        let horizontalInset = (collectionView.bounds.size.width - itemSize.width) / 2
+        let availableHorizontalSpacePerSide = (collectionView.bounds.size.width - itemSize.width) / 2
         let topInset = percentageCellShiftsDown * collectionView.frame.height // 0.086 is derived from 70/812 (812 height of Xs). This means the top of the cell should be shifted down by 8.6% of the device's screen height
-        collectionView.contentInset = UIEdgeInsets.init(top: topInset, left: horizontalInset, bottom: 0, right: horizontalInset)
+        collectionView.contentInset = UIEdgeInsets.init(top: topInset, left: availableHorizontalSpacePerSide, bottom: 0, right: availableHorizontalSpacePerSide)
     }
     
 }

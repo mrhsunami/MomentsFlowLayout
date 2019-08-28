@@ -14,6 +14,7 @@ class MomentsFlowViewController: UIViewController {
     var momentsCollectionView: MomentsCollectionView?
     var headerView: UIStackView?
     var popTransition = PopTransition()
+    var elementInsets = UIEdgeInsets()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,9 +29,10 @@ class MomentsFlowViewController: UIViewController {
     
     override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
     
+    /// Initial Setup
     func configureMomentsCollectionView() {
 
-        let layout = MomentsFlowLayout(superViewFrame: view.frame)
+        let layout = MomentsFlowLayout(containerViewFrame: view.frame)
         momentsCollectionView = MomentsCollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
         
         guard let momentsCollectionView = momentsCollectionView else { fatalError("collectionView nil") }
@@ -52,7 +54,7 @@ class MomentsFlowViewController: UIViewController {
     func configureHeader() {
         
         // Use itemSize of UICollectionViewFlowLayout to calculate placement of header.
-        let currentLayoutItemSize = (momentsCollectionView?.collectionViewLayout as! MomentsFlowLayout).currentItemSize
+        let cellSize = (momentsCollectionView?.collectionViewLayout as! MomentsFlowLayout).currentItemSize
         
         let momentsLabel = UILabel(frame: CGRect(x: 35, y: 80, width: self.view.frame.width, height: 70))
         momentsLabel.text = "Try it"
@@ -62,7 +64,7 @@ class MomentsFlowViewController: UIViewController {
         let captionLabel = UILabel()
         captionLabel.lineBreakMode = .byWordWrapping
         captionLabel.numberOfLines = 0
-        captionLabel.preferredMaxLayoutWidth = currentLayoutItemSize.width
+        captionLabel.preferredMaxLayoutWidth = cellSize.width
         captionLabel.text = "Browse to explore how home \nautomation can simplify your life"
         captionLabel.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         captionLabel.textColor = .white
@@ -76,17 +78,25 @@ class MomentsFlowViewController: UIViewController {
         self.view.addSubview(stackView)
         
         // Align the header to the leading and trailing edge of the focused cell.
-        let leadingEdgeOfFocusedCell = (view.frame.width - currentLayoutItemSize.width)/2 - 16 // the 16 represents the amount the cell is shifted towards the left from being exactly centered in the collection view.
-        let trailingEdgeOfFocusedCell = leadingEdgeOfFocusedCell + currentLayoutItemSize.width
+        let collectionViewLayout = momentsCollectionView?.collectionViewLayout as! MomentsFlowLayout
+        let cellCenterXOffset = collectionViewLayout.cellCenterXOffset // Amount the cell is shifted horizontally from center
+        let leadingEdgeOfFocusedCell = (view.frame.width - cellSize.width) / 2 + cellCenterXOffset
+        let trailingEdgeOfFocusedCell = leadingEdgeOfFocusedCell + cellSize.width
 
-        let amountCellShiftedDown = momentsCollectionView!.contentInset.top
-        let labelInsetAmounts = amountCellShiftedDown*0.35
+        let availableSpaceForLabel = momentsCollectionView!.contentInset.top
+        let labelPositionBetweenCellAndTop = 0.35 // 35 % down from the top of the available space
+        let labelTopInset = availableSpaceForLabel * 0.35 // Sets the label to start at 35%
         
+        elementInsets.left = leadingEdgeOfFocusedCell
+        elementInsets.right = leadingEdgeOfFocusedCell
+        elementInsets.top = labelTopInset
+        elementInsets.bottom = labelTopInset * 1.7
+
         stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: leadingEdgeOfFocusedCell).isActive = true
         stackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: trailingEdgeOfFocusedCell).isActive = true
-        stackView.topAnchor.constraint(equalTo: momentsCollectionView!.topAnchor, constant: labelInsetAmounts).isActive = true
-        stackView.bottomAnchor.constraint(equalTo: momentsCollectionView!.bottomAnchor, constant: -currentLayoutItemSize.height-((momentsCollectionView!.frame.size.height-currentLayoutItemSize.height)/2)+amountCellShiftedDown-labelInsetAmounts).isActive = true
+        stackView.topAnchor.constraint(equalTo: momentsCollectionView!.topAnchor, constant: labelTopInset).isActive = true
+        stackView.bottomAnchor.constraint(equalTo: momentsCollectionView!.bottomAnchor, constant: -((momentsCollectionView!.frame.size.height-cellSize.height)/2) - cellSize.height - labelTopInset + availableSpaceForLabel).isActive = true
         
         headerView = stackView
         
@@ -102,11 +112,11 @@ class MomentsFlowViewController: UIViewController {
         let shopButtonImage = UIImage(named: "shopButton")
         shopButton.setImage(shopButtonImage, for: .normal)
         shopButton.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        shopButton.layer.shadowColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
-        shopButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        shopButton.layer.shadowColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+//        shopButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        shopButton.layer.shadowRadius = 14
+//        shopButton.layer.shadowOpacity = 0.6
         shopButton.layer.masksToBounds = false
-        shopButton.layer.shadowRadius = 14
-        shopButton.layer.shadowOpacity = 0.6
         shopButton.layer.cornerRadius = shopButton.frame.width / 2
         
         let shopButtonContainer = UIView()
@@ -125,11 +135,11 @@ class MomentsFlowViewController: UIViewController {
         let arButtonImage = UIImage(named: "colorsButton")
         arButton.setImage(arButtonImage, for: .normal)
         arButton.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-        arButton.layer.shadowColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
-        arButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        arButton.layer.shadowColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+//        arButton.layer.shadowOffset = CGSize(width: 0, height: 0)
+//        arButton.layer.shadowRadius = 14
+//        arButton.layer.shadowOpacity = 0.6
         arButton.layer.masksToBounds = false
-        arButton.layer.shadowRadius = 14
-        arButton.layer.shadowOpacity = 0.6
         arButton.layer.cornerRadius = shopButton.frame.width / 2
         
         let arButtonContainer = UIView()
@@ -137,7 +147,8 @@ class MomentsFlowViewController: UIViewController {
         arButtonContainer.addSubview(arButton)
         
         arButtonContainer.translatesAutoresizingMaskIntoConstraints = false
-        arButtonContainer.topAnchor.constraint(equalTo: headerView!.topAnchor, constant: view.frame.height * 0.80).isActive = true
+//        arButtonContainer.topAnchor.constraint(equalTo: headerView!.topAnchor, constant: view.frame.height * 0.80).isActive = true
+        arButtonContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -elementInsets.bottom).isActive = true
         arButtonContainer.leadingAnchor.constraint(equalTo: headerView!.leadingAnchor, constant: currentLayoutItemSize.width + (currentLayoutItemSize.width * 0.15) - arButtonSize).isActive = true
         arButtonContainer.widthAnchor.constraint(equalToConstant: arButtonSize).isActive = true
         arButtonContainer.heightAnchor.constraint(equalToConstant: arButtonSize).isActive = true
@@ -146,26 +157,35 @@ class MomentsFlowViewController: UIViewController {
     func createViewControllerToPresent(with moment: MomentCardData) -> MomentStoriesViewController {
         let story = MomentStoriesViewController()
         story.moment = moment
-        calculateTransitionStartingView()
+        calculateAndSetTransitionStartingFrame()
         story.transitioningDelegate = popTransition
         return story
     }
     
-    func calculateTransitionStartingView() {
+    func calculateAndSetTransitionStartingFrame() {
         guard let momentsCollectionView = momentsCollectionView else { fatalError("momentsCollectionView nil")}
         guard let cell = momentsCollectionView.highlightedCell as? MomentsCardCell else { fatalError("highlightedCell nil")}
         
         let cellCurrentPresentationFrame = cell.convert(cell.contentView.layer.presentation()!.frame, to: nil)
-//        let cellCurrentFrame = momentsCollectionView.convert(cell.frame, to: nil)
-        momentsCollectionView.highlightedCellFrameDuringAnimation = cellCurrentPresentationFrame
         
-        let startingCardFrame = cellCurrentPresentationFrame
-//        let endingCardFrame = cellCurrentFrame
-        popTransition.startingCardFrame = startingCardFrame
+        popTransition.startingCardFrame = cellCurrentPresentationFrame
         popTransition.startingCardCornerRadius = cell.contentView.layer.presentation()!.cornerRadius
-//        popTransition.endingCardFrameAtDismissal = endingCardFrame
         popTransition.presentedCell = cell
+    }
     
+    // Custom scroll method
+    func scrollToItem(at indexPath: IndexPath) {
+        guard let collectionView = momentsCollectionView else { return }
+        let layout = collectionView.collectionViewLayout as! MomentsFlowLayout
+        let itemWidth = layout.currentItemSize.width
+        let lineSpacing = layout.lineSpacingBetweenCells
+        let insetX = (collectionView.bounds.size.width - itemWidth)/2
+        let offsetX = CGFloat(indexPath.row) * (itemWidth + lineSpacing) - insetX
+        let offsetY = collectionView.contentOffset.y // unchanged
+        
+        collectionView.setContentOffset(CGPoint(x: offsetX, y: offsetY), animated: true)
+        
+        collectionView.focusedCell = collectionView.cellForItem(at: indexPath) // Setting this allows the popTransition to ask it for its frame right before dismissal. Asking for the frame now would be incorrect because the content may not have finished scrolling yet.
     }
 
 }
@@ -187,37 +207,10 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
     // MARK: Collection View Delegate Methods
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         
-        scrollToItem(at: indexPath)
-        
+        scrollToItem(at: indexPath) // In case the user selects a cell that is not the focused cell, this will scroll it to the front
         let moment = momentsData[indexPath.row]
         let story = createViewControllerToPresent(with: moment)
         present(story, animated: true, completion: nil)
-    }
-    
-    // Custom scroll method
-    func scrollToItem(at indexPath: IndexPath) {
-        guard let collectionView = momentsCollectionView else { return }
-        let layout = collectionView.collectionViewLayout as! MomentsFlowLayout
-        let itemWidth = layout.currentItemSize.width
-        let itemHeight = layout.currentItemSize.height
-        let lineSpacing = layout.lineSpacing
-        let inset = (collectionView.bounds.size.width - itemWidth)/2
-        let offset = CGFloat(indexPath.row) * (itemWidth + lineSpacing) - inset
-        
-        collectionView.setContentOffset(CGPoint(x: offset, y: collectionView.contentOffset.y), animated: true)
-        
-        let cell = collectionView.cellForItem(at: indexPath)
-        
-        collectionView.focusedCell = cell
-
-//        let collectionViewVerticalMargins = (collectionView.frame.height - collectionView.contentInset.top - itemHeight)/2
-////        let frameOfCardAfterDismissal = CGRect(x: inset-16, y: collectionView.contentInset.top + collectionViewMargins + 16, width: itemWidth, height: itemHeight)
-//        let frameOfCardAfterDismissal = CGRect(x: inset + layout.cellCenterXOffset, y: collectionViewVerticalMargins + collectionView.contentInset.top, width: itemWidth, height: itemHeight)
-        
-        
-        let endFrame = collectionView.convert(cell!.frame, to: nil)
-
-        popTransition.endingCardFrameAtDismissal = endFrame
     }
 
     // Scrolling cancels a highlight
@@ -227,13 +220,13 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
         }
     }
     
-    // After highlighting a cell, letting it go with out velocity will pop it open.
+    // After highlighting a cell by catching it, letting it go without velocity (which cancels a highlight) will pop it open.
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
+    
         if let cell = momentsCollectionView?.highlightedCell {
             guard let indexPath = momentsCollectionView?.indexPath(for: cell) else { fatalError("indexPath nil") }
             
             scrollToItem(at: indexPath)
-            
             let moment = momentsData[indexPath.row]
             let story = createViewControllerToPresent(with: moment)
             

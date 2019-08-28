@@ -11,12 +11,12 @@ import UIKit
 class MomentStoriesViewController: UIViewController {
 
     var moment: MomentCardData?
+    
     let imageView = UIImageView()
     let headerLabel = UILabel()
     var headerlabelConstraints: [NSLayoutConstraint] = []
     let captionLabel = UILabel()
     var captionLabelConstraints: [NSLayoutConstraint] = []
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,8 +36,13 @@ class MomentStoriesViewController: UIViewController {
         configureMomentData()
     }
     
-    override func viewWillLayoutSubviews() {
-//        layoutText(with: moment?.preferredCardLayout)
+    func setupDismissTapGesture() {
+        let dismissTap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+        view.addGestureRecognizer(dismissTap)
+    }
+    
+    @objc func onTap() {
+        self.dismiss(animated: true, completion: nil)
     }
     
     func configureMomentData() {
@@ -107,13 +112,4 @@ class MomentStoriesViewController: UIViewController {
         
     }
     
-    func setupDismissTapGesture() {
-        let dismissTap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-        view.addGestureRecognizer(dismissTap)
-    }
-    
-    @objc func onTap() {
-        self.dismiss(animated: true, completion: nil)
-    }
-
 }

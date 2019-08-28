@@ -20,7 +20,6 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     var transitionType = TransitionType.present
     var startingCardFrame: CGRect?
     var startingCardCornerRadius: CGFloat?
-    var endingCardFrameAtDismissal: CGRect?
     var presentedCell: UICollectionViewCell?
     
     // MARK - UIViewControllerAnimatedTransitioning Methods
@@ -38,7 +37,6 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     
         guard let startingCardFrame = startingCardFrame else { fatalError("startingCardFrame nil") }
         guard let startingCardCornerRadius = startingCardCornerRadius else { fatalError("cornerRadius nil") }
-        guard let endingCardFrame = endingCardFrameAtDismissal else { fatalError("endingCardFrame nil") }
     
         switch transitionType {
         case .present:
@@ -74,17 +72,17 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
             guard let collectionView = toVC.momentsCollectionView else { fatalError("momentsCollectionView nil")}
             guard let focusedCell = collectionView.focusedCell else { fatalError("focusedCell nil") }
             
-//            let endFrame = collectionView.convert(focusedCell.frame, to: nil)
-            
+            // Setup toView
             containerView.addSubview(toView)
-            containerView.addSubview(fromView)
-            presentedCell.isHidden = true
             toView.frame = transitionContext.finalFrame(for: toVC)
+            presentedCell.isHidden = true
+
+            // Setup fromView
+            containerView.addSubview(fromView)
             
             let popDown = UIViewPropertyAnimator(duration: popDownDuration, dampingRatio: 0.75) {
                 let endFrame = collectionView.convert(focusedCell.frame, to: nil)
                 fromView.frame = endFrame
-//                fromView.frame =
                 fromView.layer.cornerRadius = startingCardCornerRadius
             }
             popDown.addCompletion { (position) in
@@ -95,7 +93,6 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
             }
             popDown.startAnimation()
         }
-        
         
     }
 
@@ -111,5 +108,4 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
         return self
     }
     
-
 }
