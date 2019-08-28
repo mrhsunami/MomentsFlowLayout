@@ -24,13 +24,12 @@ class MomentsFlowViewController: UIViewController {
         configureMomentsCollectionView()
         configureHeader()
         configureButtons()
-        
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle { return .lightContent }
     
     /// Initial Setup
-    func configureMomentsCollectionView() {
+    private func configureMomentsCollectionView() {
 
         let layout = MomentsFlowLayout(containerViewFrame: view.frame)
         momentsCollectionView = MomentsCollectionView(frame: view.safeAreaLayoutGuide.layoutFrame, collectionViewLayout: layout)
@@ -51,7 +50,7 @@ class MomentsFlowViewController: UIViewController {
         momentsCollectionView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
         momentsCollectionView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
     }
-    func configureHeader() {
+    private func configureHeader() {
         
         // Use itemSize of UICollectionViewFlowLayout to calculate placement of header.
         let cellSize = (momentsCollectionView?.collectionViewLayout as! MomentsFlowLayout).currentItemSize
@@ -101,7 +100,7 @@ class MomentsFlowViewController: UIViewController {
         headerView = stackView
         
     }
-    func configureButtons() {
+    private func configureButtons() {
         
         // Use itemSize of UICollectionViewFlowLayout to calculate placement of header.
         let currentLayoutItemSize = (momentsCollectionView?.collectionViewLayout as! MomentsFlowLayout).currentItemSize
@@ -112,10 +111,6 @@ class MomentsFlowViewController: UIViewController {
         let shopButtonImage = UIImage(named: "shopButton")
         shopButton.setImage(shopButtonImage, for: .normal)
         shopButton.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-//        shopButton.layer.shadowColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
-//        shopButton.layer.shadowOffset = CGSize(width: 0, height: 0)
-//        shopButton.layer.shadowRadius = 14
-//        shopButton.layer.shadowOpacity = 0.6
         shopButton.layer.masksToBounds = false
         shopButton.layer.cornerRadius = shopButton.frame.width / 2
         
@@ -135,10 +130,6 @@ class MomentsFlowViewController: UIViewController {
         let arButtonImage = UIImage(named: "colorsButton")
         arButton.setImage(arButtonImage, for: .normal)
         arButton.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
-//        arButton.layer.shadowColor = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
-//        arButton.layer.shadowOffset = CGSize(width: 0, height: 0)
-//        arButton.layer.shadowRadius = 14
-//        arButton.layer.shadowOpacity = 0.6
         arButton.layer.masksToBounds = false
         arButton.layer.cornerRadius = shopButton.frame.width / 2
         
@@ -147,34 +138,22 @@ class MomentsFlowViewController: UIViewController {
         arButtonContainer.addSubview(arButton)
         
         arButtonContainer.translatesAutoresizingMaskIntoConstraints = false
-//        arButtonContainer.topAnchor.constraint(equalTo: headerView!.topAnchor, constant: view.frame.height * 0.80).isActive = true
         arButtonContainer.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -elementInsets.bottom).isActive = true
         arButtonContainer.leadingAnchor.constraint(equalTo: headerView!.leadingAnchor, constant: currentLayoutItemSize.width + (currentLayoutItemSize.width * 0.15) - arButtonSize).isActive = true
         arButtonContainer.widthAnchor.constraint(equalToConstant: arButtonSize).isActive = true
         arButtonContainer.heightAnchor.constraint(equalToConstant: arButtonSize).isActive = true
     }
     
-    func createViewControllerToPresent(with moment: MomentCardData) -> MomentStoriesViewController {
-        let story = MomentStoriesViewController()
-        story.moment = moment
-        calculateAndSetTransitionStartingFrame()
-        story.transitioningDelegate = popTransition
-        return story
+    /// Custom Methods for Presenting Stories
+    private func presentViewController(from cell: UICollectionViewCell, at indexPath: IndexPath) {
+        scrollToItem(at: indexPath) // In case the user selects a cell that is not the focused cell, this will scroll it to the front
+        let moment = momentsData[indexPath.row]
+        let story = createViewControllerToPresent(with: moment, from: cell)
+        present(story, animated: true, completion: nil)
     }
     
-    func calculateAndSetTransitionStartingFrame() {
-        guard let momentsCollectionView = momentsCollectionView else { fatalError("momentsCollectionView nil")}
-        guard let cell = momentsCollectionView.highlightedCell as? MomentsCardCell else { fatalError("highlightedCell nil")}
-        
-        let cellCurrentPresentationFrame = cell.convert(cell.contentView.layer.presentation()!.frame, to: nil)
-        
-        popTransition.startingCardFrame = cellCurrentPresentationFrame
-        popTransition.startingCardCornerRadius = cell.contentView.layer.presentation()!.cornerRadius
-        popTransition.presentedCell = cell
-    }
-    
-    // Custom scroll method
-    func scrollToItem(at indexPath: IndexPath) {
+    // In case the user selects a cell that is not the focused cell, use this to scroll it to the front
+    private func scrollToItem(at indexPath: IndexPath) {
         guard let collectionView = momentsCollectionView else { return }
         let layout = collectionView.collectionViewLayout as! MomentsFlowLayout
         let itemWidth = layout.currentItemSize.width
@@ -186,6 +165,21 @@ class MomentsFlowViewController: UIViewController {
         collectionView.setContentOffset(CGPoint(x: offsetX, y: offsetY), animated: true)
         
         collectionView.focusedCell = collectionView.cellForItem(at: indexPath) // Setting this allows the popTransition to ask it for its frame right before dismissal. Asking for the frame now would be incorrect because the content may not have finished scrolling yet.
+    }
+    
+    private func createViewControllerToPresent(with moment: MomentCardData, from cell: UICollectionViewCell) -> MomentStoriesViewController {
+        let story = MomentStoriesViewController()
+        story.moment = moment
+        story.transitioningDelegate = popTransition
+        applyTransitionStartingFrame(from: cell)
+        return story
+    }
+    
+    private func applyTransitionStartingFrame(from cell: UICollectionViewCell) {
+        let cellCurrentPresentationFrame = cell.convert(cell.contentView.layer.presentation()!.frame, to: nil)
+        popTransition.startingCardFrame = cellCurrentPresentationFrame
+        popTransition.startingCardCornerRadius = cell.contentView.layer.presentation()!.cornerRadius
+        popTransition.presentedCell = cell
     }
 
 }
@@ -206,14 +200,11 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
     
     // MARK: Collection View Delegate Methods
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        
-        scrollToItem(at: indexPath) // In case the user selects a cell that is not the focused cell, this will scroll it to the front
-        let moment = momentsData[indexPath.row]
-        let story = createViewControllerToPresent(with: moment)
-        present(story, animated: true, completion: nil)
+        guard let cell = collectionView.cellForItem(at: indexPath) else { fatalError("cell nil")}
+        presentViewController(from: cell, at: indexPath)
     }
 
-    // Scrolling cancels a highlight
+    // Scrolling unhighlights a cell
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if let cell = momentsCollectionView?.highlightedCell {
             momentsCollectionView?.unhighlight(cell: cell)
@@ -222,16 +213,11 @@ extension MomentsFlowViewController: UICollectionViewDataSource, UICollectionVie
     
     // After highlighting a cell by catching it, letting it go without velocity (which cancels a highlight) will pop it open.
     func scrollViewWillBeginDecelerating(_ scrollView: UIScrollView) {
-    
-        if let cell = momentsCollectionView?.highlightedCell {
-            guard let indexPath = momentsCollectionView?.indexPath(for: cell) else { fatalError("indexPath nil") }
-            
-            scrollToItem(at: indexPath)
-            let moment = momentsData[indexPath.row]
-            let story = createViewControllerToPresent(with: moment)
-            
-            momentsCollectionView?.unhighlight(cell: cell)
-            present(story, animated: true, completion: nil)
+        guard let momentsCollectionView = momentsCollectionView else { fatalError("momentsCollectionView nil")}
+        if let cell = momentsCollectionView.highlightedCell {
+            momentsCollectionView.unhighlight(cell: cell)
+            guard let indexPath = momentsCollectionView.indexPath(for: cell) else { fatalError("indexPath nil") }
+            presentViewController(from: cell, at: indexPath)
         }
     }
 

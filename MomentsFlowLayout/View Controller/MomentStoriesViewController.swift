@@ -10,51 +10,58 @@ import UIKit
 
 class MomentStoriesViewController: UIViewController {
 
-    var moment: MomentCardData?
+    var moment: MomentCardData? {
+        didSet {
+            if let moment = moment {
+                applyMomentData(from: moment)
+            }
+        }
+    }
     
-    let imageView = UIImageView()
-    let headerLabel = UILabel()
-    var headerlabelConstraints: [NSLayoutConstraint] = []
-    let captionLabel = UILabel()
-    var captionLabelConstraints: [NSLayoutConstraint] = []
+    private let imageView = UIImageView()
+    private let headerLabel = UILabel()
+    private var headerlabelConstraints: [NSLayoutConstraint] = []
+    private let captionLabel = UILabel()
+    private var captionLabelConstraints: [NSLayoutConstraint] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         setupDismissTapGesture()
+        
         view.addSubview(imageView)
         view.addSubview(headerLabel)
         view.addSubview(captionLabel)
         
+        layoutImageView()
+    }
+    
+    private func setupDismissTapGesture() {
+        let dismissTap = UITapGestureRecognizer(target: self, action: #selector(onTap))
+        view.addGestureRecognizer(dismissTap)
+    }
+    
+    @objc private func onTap() {
+        self.dismiss(animated: true, completion: nil)
+    }
+    
+    private func applyMomentData(from moment: MomentCardData) {
+        imageView.image = moment.backgroundImage
+        headerLabel.text = moment.heading
+        captionLabel.text = moment.caption
+    }
+    
+    private func layoutImageView() {
         imageView.frame = view.frame
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         imageView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         imageView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
-
-        configureMomentData()
-    }
-    
-    func setupDismissTapGesture() {
-        let dismissTap = UITapGestureRecognizer(target: self, action: #selector(onTap))
-        view.addGestureRecognizer(dismissTap)
-    }
-    
-    @objc func onTap() {
-        self.dismiss(animated: true, completion: nil)
-    }
-    
-    func configureMomentData() {
-        guard let moment = moment else { fatalError("no moment")}
-        imageView.image = moment.backgroundImage
         imageView.contentMode = .scaleAspectFill
-        headerLabel.text = moment.heading
-        captionLabel.text = moment.caption
-//        layoutText(with: moment.preferredCardLayout)
     }
     
-    func layoutText(with layout: MomentCardLayout?) {
+    private func layoutText(with layout: MomentCardLayout?) {
         
         /// The parent function receives an optional layout which has to be unwrapped before passing the layout as an arguement to this internal layout function.
         func _layout(using layout: MomentCardLayout) {

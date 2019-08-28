@@ -21,6 +21,8 @@ class MomentsCollectionView: UICollectionView {
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        print("touchesEnded")
         if let cell = highlightedCell {
             guard let indexPath = indexPath(for: cell) else { fatalError("indexPath nil")}
             guard let delegate = delegate else { fatalError("delegate nil")}
@@ -30,7 +32,6 @@ class MomentsCollectionView: UICollectionView {
             
             unhighlight(cell: cell)
         }
-        
     }
     
     func highlight(cell: UICollectionViewCell) {
