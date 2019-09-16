@@ -26,12 +26,7 @@ class MomentStoriesViewController: UIViewController {
         view.addSubview(headerLabel)
         view.addSubview(captionLabel)
         
-        imageView.frame = view.frame
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
-        imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
-        imageView.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
-        imageView.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+        layout(backgroundImage: imageView)
 
         configureMomentData()
     }
@@ -110,6 +105,15 @@ class MomentStoriesViewController: UIViewController {
             _layout(using: defaultLayout)
         }
         
+    }
+    
+    func layout(backgroundImage: UIImageView) {
+        backgroundImage.frame = view.frame
+        backgroundImage.translatesAutoresizingMaskIntoConstraints = false
+        backgroundImage.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        backgroundImage.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
+        backgroundImage.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
+        backgroundImage.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
     }
     
 }
