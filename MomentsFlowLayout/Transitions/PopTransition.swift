@@ -21,6 +21,7 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
     var startingCardFrame: CGRect?
     var startingCardCornerRadius: CGFloat?
     var presentedCell: UICollectionViewCell?
+    var viewToFadeOut: UIView?
     
     // MARK - UIViewControllerAnimatedTransitioning Methods
     func transitionDuration(using transitionContext: UIViewControllerContextTransitioning?) -> TimeInterval {
@@ -55,6 +56,7 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
             let popUp = UIViewPropertyAnimator(duration: popUpDuration, dampingRatio: 0.75) {
                 toView.frame = finalFrame
                 toView.layer.cornerRadius = 0
+//                self.viewToFadeOut?.alpha = 0
             }
             popUp.addCompletion { (position) in
                 if position == .end {
@@ -63,7 +65,7 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
             }
             popUp.startAnimation()
         case .dismiss:
-            guard let fromVC = transitionContext.viewController(forKey: .from) else { fatalError("fromVC nil") }
+            guard let fromVC = transitionContext.viewController(forKey: .from) as? MomentStoriesViewController else { fatalError("fromVC nil") }
             guard let fromView = fromVC.view else { fatalError("fromView nil") }
             guard let toVC = transitionContext.viewController(forKey: .to) as? MomentsFlowViewController else { fatalError("toVC nil") }
             guard let toView = toVC.view else { fatalError("toView nil")}
@@ -84,6 +86,7 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
                 let endFrame = collectionView.convert(focusedCell.frame, to: nil)
                 fromView.frame = endFrame
                 fromView.layer.cornerRadius = startingCardCornerRadius
+                fromVC.imageView.alpha = 1
             }
             popDown.addCompletion { (position) in
                 if position == .end {

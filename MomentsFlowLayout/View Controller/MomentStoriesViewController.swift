@@ -21,7 +21,7 @@ class MomentStoriesViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        setupDismissTapGesture()
+        setupAR()
         view.addSubview(imageView)
         view.addSubview(headerLabel)
         view.addSubview(captionLabel)
@@ -31,7 +31,14 @@ class MomentStoriesViewController: UIViewController {
         configureMomentData()
     }
     
-    func setupDismissTapGesture() {
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        UIView.animate(withDuration: 0.4) {
+            self.imageView.alpha = 0
+        }
+    }
+    
+    func setupDismissTapGesture(to: UIView) {
         let dismissTap = UITapGestureRecognizer(target: self, action: #selector(onTap))
         view.addGestureRecognizer(dismissTap)
     }
@@ -114,6 +121,13 @@ class MomentStoriesViewController: UIViewController {
         backgroundImage.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         backgroundImage.widthAnchor.constraint(equalTo: view.widthAnchor).isActive = true
         backgroundImage.heightAnchor.constraint(equalTo: view.heightAnchor).isActive = true
+    }
+    
+    func setupAR() {
+        let arVC = ARViewController()
+        self.addChild(arVC)
+        view.addSubview(arVC.view)
+        setupDismissTapGesture(to: arVC.view)
     }
     
 }

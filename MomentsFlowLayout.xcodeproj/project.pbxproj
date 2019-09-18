@@ -14,6 +14,7 @@
 		D81937252308A36700BF3944 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D81937232308A36700BF3944 /* LaunchScreen.storyboard */; };
 		D819372D2308A9BC00BF3944 /* MomentsCardCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D819372C2308A9BC00BF3944 /* MomentsCardCell.swift */; };
 		D81937302308ABD200BF3944 /* MomentsFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = D819372F2308ABD200BF3944 /* MomentsFlowLayout.swift */; };
+		D84C89D42331ABC300D3894B /* ARViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D84C89D32331ABC300D3894B /* ARViewController.swift */; };
 		D871001423148A8700359D61 /* PopTransition.swift in Sources */ = {isa = PBXBuildFile; fileRef = D871001323148A8700359D61 /* PopTransition.swift */; };
 		D87BDAC22312447100A7AFD3 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D87BDAC12312447100A7AFD3 /* StoreKit.framework */; };
 		D87BDAC42312486300A7AFD3 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D87BDAC32312486300A7AFD3 /* Assets.xcassets */; };
@@ -33,6 +34,7 @@
 		D81937262308A36700BF3944 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D819372C2308A9BC00BF3944 /* MomentsCardCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsCardCell.swift; sourceTree = "<group>"; };
 		D819372F2308ABD200BF3944 /* MomentsFlowLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MomentsFlowLayout.swift; sourceTree = "<group>"; };
+		D84C89D32331ABC300D3894B /* ARViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ARViewController.swift; sourceTree = "<group>"; };
 		D871001323148A8700359D61 /* PopTransition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PopTransition.swift; sourceTree = "<group>"; };
 		D87BDAC12312447100A7AFD3 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		D87BDAC32312486300A7AFD3 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -112,6 +114,7 @@
 			children = (
 				D819371C2308A36500BF3944 /* MomentsFlowViewController.swift */,
 				D8DB3A74230FA32B009FC1DE /* MomentStoriesViewController.swift */,
+				D84C89D32331ABC300D3894B /* ARViewController.swift */,
 			);
 			path = "View Controller";
 			sourceTree = "<group>";
@@ -226,6 +229,7 @@
 				D8DB3A75230FA32B009FC1DE /* MomentStoriesViewController.swift in Sources */,
 				D81278BB230CF44F00C9A57F /* MomentCardData.swift in Sources */,
 				D8DB3A782310771A009FC1DE /* DemoDataStore.swift in Sources */,
+				D84C89D42331ABC300D3894B /* ARViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

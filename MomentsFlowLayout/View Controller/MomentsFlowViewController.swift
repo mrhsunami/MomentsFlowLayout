@@ -158,7 +158,11 @@ class MomentsFlowViewController: UIViewController {
         let story = MomentStoriesViewController()
         story.moment = moment
         calculateAndSetTransitionStartingFrame()
+//        let transition = popTransition
         story.transitioningDelegate = popTransition
+//        transition.viewToFadeOut = story.imageView
+        popTransition.viewToFadeOut = story.imageView
+        
         return story
     }
     
