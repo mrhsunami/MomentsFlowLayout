@@ -86,7 +86,7 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
                 let endFrame = collectionView.convert(focusedCell.frame, to: nil)
                 fromView.frame = endFrame
                 fromView.layer.cornerRadius = startingCardCornerRadius
-                fromVC.imageView.alpha = 1
+//                fromVC.imageView.alpha = 1
             }
             popDown.addCompletion { (position) in
                 if position == .end {
@@ -95,6 +95,9 @@ class PopTransition: NSObject, UIViewControllerAnimatedTransitioning, UIViewCont
                 }
             }
             popDown.startAnimation()
+            UIView.animate(withDuration: 0.6) {
+                fromVC.imageView.alpha = 1
+            }
         }
         
     }

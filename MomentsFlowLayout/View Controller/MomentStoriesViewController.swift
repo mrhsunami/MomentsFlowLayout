@@ -33,7 +33,7 @@ class MomentStoriesViewController: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        UIView.animate(withDuration: 0.4) {
+        UIView.animate(withDuration: 0.6) {
             self.imageView.alpha = 0
         }
     }
