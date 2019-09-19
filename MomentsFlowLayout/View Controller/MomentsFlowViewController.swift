@@ -156,6 +156,7 @@ class MomentsFlowViewController: UIViewController {
     
     func createViewControllerToPresent(with moment: MomentCardData) -> MomentStoriesViewController {
         let story = MomentStoriesViewController()
+        story.modalPresentationStyle = .fullScreen
         story.moment = moment
         calculateAndSetTransitionStartingFrame()
 //        let transition = popTransition
